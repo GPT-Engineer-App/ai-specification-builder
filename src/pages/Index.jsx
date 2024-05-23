@@ -1,15 +1,17 @@
-import { Container, Text, VStack, Input, Button, List, ListItem } from "@chakra-ui/react";
+import { Container, Text, VStack, Input, Button, List, ListItem, Checkbox } from "@chakra-ui/react";
 import { useState } from "react";
 
 const Index = () => {
   const [todo, setTodo] = useState("");
   const [todos, setTodos] = useState([]);
+  const [completedTodos, setCompletedTodos] = useState([]);
   const [editIndex, setEditIndex] = useState(null);
   const [editText, setEditText] = useState("");
 
   const addTodo = () => {
     if (todo.trim() !== "") {
       setTodos([...todos, todo]);
+      setCompletedTodos([...completedTodos, false]);
       setTodo("");
     }
   };
@@ -27,9 +29,17 @@ const Index = () => {
     setEditText("");
   };
 
+  const toggleComplete = (index) => {
+    const updatedCompletedTodos = [...completedTodos];
+    updatedCompletedTodos[index] = !updatedCompletedTodos[index];
+    setCompletedTodos(updatedCompletedTodos);
+  };
+
   const deleteTodo = (index) => {
     const updatedTodos = todos.filter((_, i) => i !== index);
+    const updatedCompletedTodos = completedTodos.filter((_, i) => i !== index);
     setTodos(updatedTodos);
+    setCompletedTodos(updatedCompletedTodos);
   };
 
   return (
@@ -46,6 +56,7 @@ const Index = () => {
         <List spacing={3} width="100%">
           {todos.map((item, index) => (
             <ListItem key={index} p={2} borderWidth="1px" borderRadius="md" display="flex" alignItems="center">
+              <Checkbox isChecked={completedTodos[index]} onChange={() => toggleComplete(index)} mr={2} />
               {editIndex === index ? (
                 <Input
                   value={editText}
@@ -53,7 +64,7 @@ const Index = () => {
                   mr={2}
                 />
               ) : (
-                <Text flex="1">{item}</Text>
+                <Text flex="1" textDecoration={completedTodos[index] ? "line-through" : "none"}>{item}</Text>
               )}
               {editIndex === index ? (
                 <Button onClick={handleSave} colorScheme="teal" size="sm" ml={2}>Save</Button>
