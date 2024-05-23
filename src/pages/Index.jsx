@@ -27,6 +27,11 @@ const Index = () => {
     setEditText("");
   };
 
+  const deleteTodo = (index) => {
+    const updatedTodos = todos.filter((_, i) => i !== index);
+    setTodos(updatedTodos);
+  };
+
   return (
     <Container centerContent maxW="container.md" height="100vh" display="flex" flexDirection="column" justifyContent="center" alignItems="center">
       <VStack spacing={4}>
@@ -55,6 +60,7 @@ const Index = () => {
               ) : (
                 <Button onClick={() => handleEdit(index)} colorScheme="teal" size="sm" ml={2}>Edit</Button>
               )}
+              <Button onClick={() => deleteTodo(index)} colorScheme="red" size="sm" ml={2}>Delete</Button>
             </ListItem>
           ))}
         </List>
